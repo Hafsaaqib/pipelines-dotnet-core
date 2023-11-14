@@ -10,27 +10,20 @@ pool:
   vmImage: 'ubuntu-latest'
 
 stages:
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+    - task: SomeTask
 
-  - stage: build   
-    jobs:
-      - job: buildjob        
-        steps:
-          - checkout: none
-      - deployment: DeployWeb
-        pool:
-          vmImage: 'Ubuntu-16.04'
-        environment: 'Verify'
+- stage: DeployTest
+  jobs:
+  - deployment: DeployTest
+    displayName: Deploy to test
+    environment: Test
 
-  - stage: deploy
-    jobs:
-      - deployment: DeployWeb
-        displayName: deploy Web App
-        pool:
-          vmImage: 'Ubuntu-16.04'
-        environment: 'Verify'
-        strategy:
-          # default deployment strategy, more coming...
-          runOnce:
-            deploy:
-              steps:
-              - script: echo my first deployment
+- stage: DeployUAT
+  jobs:
+  - deployment: DeployUAT
+    displayName: Deploy to UAT
+    environment: UAT
